@@ -9,6 +9,14 @@ import 'package:intl/intl.dart';
 import '../models/cart_item.dart';
 
 class Cart with ChangeNotifier {
+  String? token, userId;
+
+  void updateData(tokenData, uid) {
+    token = tokenData;
+    userId = uid;
+    notifyListeners();
+  }
+
   final Map<String, CartItem> _items = {};
   final Map<String, String> _firebaseIds = {};
 
@@ -88,6 +96,7 @@ class Cart with ChangeNotifier {
             'qty': 1,
             'createdAt': DateTime.now().toString(),
             'imageUrl': imageUrl,
+            'userId': userId,
           }),
         );
 

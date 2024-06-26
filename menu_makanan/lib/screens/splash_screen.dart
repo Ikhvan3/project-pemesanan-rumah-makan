@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:menu_makanan/screens/auth_page.dart';
 import 'package:menu_makanan/screens/home_screen.dart';
 
 class StartScreen extends StatefulWidget {
@@ -18,12 +19,7 @@ class _StartScreenState extends State<StartScreen> {
     Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(
-            StartScreen: '',
-            UtamaScreen: '',
-          ),
-        ),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
     });
   }
