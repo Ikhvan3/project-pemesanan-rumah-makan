@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:menu_makanan/providers/auth.dart';
 import 'package:menu_makanan/screens/makanan_screen/makanan_overview_screen.dart';
 import 'package:menu_makanan/screens/minuman_screen/minuman_overview_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen(
@@ -40,11 +42,16 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: Icon(Icons.account_circle_outlined),
-                  iconSize: 30,
-                  color: const Color.fromARGB(255, 10, 10, 10),
-                  onPressed: () {},
+                  onPressed: () =>
+                      Provider.of<Authen>(context, listen: false).logout(),
+                  icon: Icon(Icons.logout),
                 ),
+                // IconButton(
+                //   icon: Icon(Icons.account_circle_outlined),
+                //   iconSize: 30,
+                //   color: const Color.fromARGB(255, 10, 10, 10),
+                //   onPressed: () {},
+                // ),
               ],
             ),
           ),

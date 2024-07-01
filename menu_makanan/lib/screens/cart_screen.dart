@@ -54,8 +54,8 @@ class _CartScreenState extends State<CartScreen> {
             child: ListView.builder(
               itemCount: cardData.items.length,
               itemBuilder: (context, index) {
-                final id = cardData.items.keys.toList()[index];
-                final cartItem = cardData.items[id]!;
+                final firebaseId = cardData.items.keys.toList()[index];
+                final cartItem = cardData.items[firebaseId]!;
 
                 return ListTile(
                   tileColor: const Color.fromARGB(255, 199, 199, 199),
@@ -98,7 +98,7 @@ class _CartScreenState extends State<CartScreen> {
                       IconButton(
                         icon: Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
-                          cardData.removeItem(id).then(
+                          cardData.removeItem(firebaseId).then(
                             (_) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

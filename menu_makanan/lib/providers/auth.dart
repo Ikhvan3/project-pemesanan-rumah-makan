@@ -104,10 +104,28 @@ class Authen with ChangeNotifier {
           seconds: int.parse(responseData["expiresIn"]),
         ),
       );
+
+      await tempData(); // Update shared preferences
     } catch (error) {
       print(error);
       throw error;
     }
+  }
+
+  Future<void> logout() async {
+    //membuat semua data = null agar kembali ke loginpage,kembalian dari get token
+    _idToken = null;
+    userId = null;
+    _expiryDate = null;
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+      _authTimer = null;
+    }
+
+    //untuk clear sharedpreferennya dari local storage
+    final pref = await SharedPreferences.getInstance();
+    pref.clear();
+    notifyListeners();
   }
 
   Future<bool?> autoLogin() async {

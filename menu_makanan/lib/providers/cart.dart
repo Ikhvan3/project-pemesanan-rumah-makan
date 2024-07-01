@@ -9,13 +9,15 @@ import 'package:intl/intl.dart';
 import '../models/cart_item.dart';
 
 class Cart with ChangeNotifier {
-  String? token, userId;
+  String? token, firebaseId;
 
   void updateData(tokenData, uid) {
     token = tokenData;
-    userId = uid;
+    firebaseId = uid;
     notifyListeners();
   }
+
+  String urlMaster = "https://food-shop-f4e27-default-rtdb.firebaseio.com/";
 
   final Map<String, CartItem> _items = {};
   final Map<String, String> _firebaseIds = {};
@@ -41,6 +43,7 @@ class Cart with ChangeNotifier {
 
   Future<void> addCart(
       String id, String name, double price, String imageUrl) async {
+    final userId = firebaseId;
     if (_items.containsKey(id)) {
       //keetika sudah tersedia key product id
       _items.update(
@@ -58,8 +61,7 @@ class Cart with ChangeNotifier {
       //perbarui data di firebase
       final firebaseId = _firebaseIds[id];
       if (firebaseId != null) {
-        Uri url = Uri.parse(
-            "https://food-shop-f4e27-default-rtdb.firebaseio.com/cart/$firebaseId.json");
+        Uri url = Uri.parse("$urlMaster/cart/$firebaseId.json?auth=$token");
 
         final response = await http.patch(
           url,
@@ -83,8 +85,7 @@ class Cart with ChangeNotifier {
       _items.putIfAbsent(id, () => newCartItem);
 
       //kirim data ke firebase
-      Uri url = Uri.parse(
-          "https://food-shop-f4e27-default-rtdb.firebaseio.com/cart.json");
+      Uri url = Uri.parse("$urlMaster/cart.json?auth=$token");
 
       try {
         final response = await http.post(
@@ -96,7 +97,7 @@ class Cart with ChangeNotifier {
             'qty': 1,
             'createdAt': DateTime.now().toString(),
             'imageUrl': imageUrl,
-            'userId': userId,
+            'userId': firebaseId,
           }),
         );
 
@@ -119,7 +120,7 @@ class Cart with ChangeNotifier {
     }
     // Mendapatkan URL Firebase untuk menghapus item
     Uri url = Uri.parse(
-      "https://food-shop-f4e27-default-rtdb.firebaseio.com/cart/$firebaseId.json",
+      "$urlMaster/cart/$firebaseId.json?auth=$token",
     );
 
     try {
@@ -144,32 +145,66 @@ class Cart with ChangeNotifier {
   }
 
   Future<void> initialDataGet() async {
+    if (firebaseId == null) {
+      print("Error: firebaseId is null.");
+      return;
+    }
+    if (token == null) {
+      print("Error: token is null.");
+      return;
+    }
+    print("Fetching data for user: $firebaseId with token: $token");
+
     Uri url = Uri.parse(
-        "https://food-shop-f4e27-default-rtdb.firebaseio.com/cart.json");
+        '$urlMaster/cart.json?auth=$token&orderBy="userId"&equalTo="$firebaseId"');
+    try {
+      var hasilGetData = await http.get(url);
+      if (hasilGetData.statusCode < 200 || hasilGetData.statusCode >= 300) {
+        throw (hasilGetData.statusCode);
+      } else {
+        if (hasilGetData.body == null || hasilGetData.body.isEmpty) {
+          print("Tidak ada data yang ditemukan dalam respons.");
+          return;
+        }
+        var dataResponse = json.decode(hasilGetData.body);
 
-    var hasilGetData = await http.get(url);
+        if (dataResponse == null) {
+          print("Data adalah null.");
+          return;
+        }
+        if (dataResponse is! Map<String, dynamic>) {
+          print("Data bukan tipe Map<String, dynamic>.");
+          return;
+        }
 
-    var dataResponse = json.decode(hasilGetData.body) as Map<String, dynamic>?;
+        _items
+            .clear(); // Clear existing items to ensure only the current user's items are loaded
+        _firebaseIds.clear(); // Clear existing Firebase IDs
 
-    if (dataResponse != null) {
-      dataResponse.forEach((key, value) {
-        DateTime dateTimeParse =
-            DateFormat("yyyy-MM-dd HH:mm:ss").parse(value["createdAt"]);
+        var cartData = dataResponse as Map<String, dynamic>;
 
-        _items.putIfAbsent(
-            value['id'],
-            () => CartItem(
-                  id: value['id'],
-                  createdAt: dateTimeParse.toString(),
-                  price: value["price"],
-                  qty: value["qty"],
-                  name: value["name"],
-                  imageUrl: value["imageUrl"],
-                ));
-        _firebaseIds[value['id']] = key;
-      });
-      print("BERHASIL MASUKAN DATA LIST");
-      notifyListeners();
+        cartData.forEach((key, value) {
+          DateTime dateTimeParse =
+              DateFormat("yyyy-MM-dd HH:mm:ss").parse(value["createdAt"]);
+
+          _items.putIfAbsent(
+              value['id'],
+              () => CartItem(
+                    id: value['id'],
+                    createdAt: dateTimeParse.toString(),
+                    price: value["price"],
+                    qty: value["qty"],
+                    name: value["name"],
+                    imageUrl: value["imageUrl"],
+                  ));
+          _firebaseIds[value['id']] = key;
+        });
+        print("BERHASIL MASUKAN DATA LIST");
+        notifyListeners();
+      }
+    } catch (err) {
+      print("Terjadi kesalahan: $err");
+      throw (err);
     }
   }
 }
