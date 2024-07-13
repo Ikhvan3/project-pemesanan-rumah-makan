@@ -29,8 +29,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu Makanan'),
-        backgroundColor: const Color.fromARGB(255, 199, 199, 199),
+        title: Text(
+          'Menu Makanan',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Color.fromARGB(255, 0, 174, 145),
         actions: [
           Consumer<Cart>(
             builder: (context, value, ch) {
@@ -45,12 +48,23 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                   CartScreen.routeName,
                 );
               },
-              icon: Icon(Icons.shopping_cart),
+              icon: Icon(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  Icons.shopping_cart),
             ),
           ),
         ],
       ),
-      body: MakananGrid(),
+      body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Color.fromARGB(255, 126, 255, 242),
+                Color.fromARGB(255, 238, 238, 238),
+              ])),
+          child: MakananGrid()),
     );
   }
 }

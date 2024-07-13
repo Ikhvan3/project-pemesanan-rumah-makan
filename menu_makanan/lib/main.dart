@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           title: 'MyShop',
           theme: ThemeData(
             primarySwatch: Colors.indigo,
-            hintColor: Colors.amber,
+            hintColor: Color.fromARGB(255, 255, 255, 255),
             fontFamily: 'Lato',
           ),
           home: auth.isAuthe

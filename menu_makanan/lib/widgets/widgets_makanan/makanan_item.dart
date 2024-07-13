@@ -33,20 +33,21 @@ class MakananItem extends StatelessWidget {
               Container(
                   padding: EdgeInsets.all(5),
                   width: 200,
-                  color: Color.fromARGB(255, 95, 95, 95),
+                  color: Color.fromARGB(255, 0, 174, 145),
                   child: Text(
                     product.name.toString(),
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w600),
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontWeight: FontWeight.w600),
                   )),
               GridTileBar(
-                backgroundColor: Color.fromARGB(255, 95, 95, 95),
+                backgroundColor: Color.fromARGB(255, 0, 200, 167),
                 leading: Consumer<DaftarMakanan>(
                   builder: (context, productData, child) => IconButton(
                     icon: (productData.isFavorite)
                         ? Icon(Icons.favorite)
                         : Icon(Icons.favorite_border_outlined),
-                    color: Theme.of(context).hintColor,
+                    color: Colors.white,
                     onPressed: () {
                       productData.statusFav();
                     },
@@ -54,7 +55,10 @@ class MakananItem extends StatelessWidget {
                 ),
                 title: Text(
                   "\Rp ${cart.formatHarga(product.price!)}",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white),
                 ),
                 trailing: IconButton(
                   icon: Icon(

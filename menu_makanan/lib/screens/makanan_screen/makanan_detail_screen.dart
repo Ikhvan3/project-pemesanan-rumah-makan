@@ -19,7 +19,11 @@ class ProductDetailScreen extends StatelessWidget {
     // ...
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product Details'),
+        title: Text(
+          'Detail Makanan',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Color.fromARGB(255, 0, 174, 145),
         actions: [
           Consumer<Cart>(
             builder: (context, value, ch) {
@@ -34,82 +38,94 @@ class ProductDetailScreen extends StatelessWidget {
                   CartScreen.routeName,
                 );
               },
-              icon: Icon(Icons.shopping_cart),
+              icon: Icon(
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  Icons.shopping_cart),
             ),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            height: 250,
-            child: Image.asset(
-              "${product.imageAsset}",
-              fit: BoxFit.cover,
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+              Color.fromARGB(255, 126, 255, 242),
+              Color.fromARGB(255, 238, 238, 238),
+            ])),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 250,
+              child: Image.asset(
+                "${product.imageAsset}",
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Text(
-            "${product.name}",
-            style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
+            SizedBox(
+              height: 30,
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "\Rp ${cart.formatHarga(product.price!)}",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              "${product.description}",
-              textAlign: TextAlign.justify,
+            Text(
+              "${product.name}",
               style: TextStyle(
-                fontSize: 15,
+                fontSize: 35,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          OutlinedButton(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Berhasil Ditambahkan"),
-                  duration: Duration(milliseconds: 1000),
-                ),
-              );
-              cart.addCart(
-                product.id.toString(),
-                product.name.toString(),
-                product.price,
-                product.imageAsset,
-              );
-            },
-            child: Text(
-              "Add to cart",
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "\Rp ${cart.formatHarga(product.price!)}",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-        ],
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "${product.description}",
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            OutlinedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Berhasil Ditambahkan"),
+                    duration: Duration(milliseconds: 1000),
+                  ),
+                );
+                cart.addCart(
+                  product.id.toString(),
+                  product.name.toString(),
+                  product.price,
+                  product.imageAsset,
+                );
+              },
+              child: Text(
+                "Add to cart",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -36,7 +36,7 @@ class BadgeW extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 10,
-                color: Colors.black,
+                color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
           ),
